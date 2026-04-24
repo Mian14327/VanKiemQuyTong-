@@ -57809,27 +57809,40 @@ function $9() {
             if (S === "SHIELD" && _) {
                 const q = Math.acos(1 - 2 * (D + .5) / ei.swordCount)
                   , K = Math.PI * (1 + Math.sqrt(5)) * D
-                  , le = ei.shieldRadius * Math.sin(q) * Math.cos(K + R * ei.shieldOrbitSpeed)
-                  , we = ei.shieldRadius * Math.sin(q) * Math.sin(K + R * ei.shieldOrbitSpeed)
+                  , le = ei.shieldRadius * Math.sin(q) * Math.cos(K)
+                  , we = ei.shieldRadius * Math.sin(q) * Math.sin(K)
                   , Ae = ei.shieldRadius * Math.cos(q)
-                  , G = le * Math.cos(R * .3) - Ae * Math.sin(R * .3)
-                  , se = le * Math.sin(R * .3) + Ae * Math.cos(R * .3);
-                P.set(E.x + G, E.y + we, E.z + se),
-                P.x += Math.sin(R * 3 + D) * .2,
-                P.y += Math.cos(R * 3 + D * .7) * .2
+                  , ry = R * ei.shieldOrbitSpeed
+                  , rx = R * ei.shieldOrbitSpeed * 0.7
+                  , rz = R * ei.shieldOrbitSpeed * 0.4
+                  , cy = Math.cos(ry), sy = Math.sin(ry)
+                  , cx = Math.cos(rx), sx = Math.sin(rx)
+                  , cz = Math.cos(rz), sz = Math.sin(rz)
+                  , t1x = le * cy + Ae * sy
+                  , t1y = we
+                  , t1z = -le * sy + Ae * cy
+                  , t2x = t1x
+                  , t2y = t1y * cx - t1z * sx
+                  , t2z = t1y * sx + t1z * cx
+                  , G = t2x * cz - t2y * sz
+                  , se = t2x * sz + t2y * cz
+                  , finalZ = t2z;
+                P.set(E.x + G, E.y + se, E.z + finalZ),
+                P.x += Math.sin(R * 3 + D) * .15,
+                P.y += Math.cos(R * 3 + D * .7) * .15
             } else if (S === "LOTUS" || S === "LOTUS" && !_) {
-                const q = Math.PI * (3 - Math.sqrt(5))
-                  , K = ei.lotusRadius
-                  , le = 6
-                  , we = D / (ei.swordCount - 1)
-                  , Ae = Math.sqrt(we)
-                  , G = le + (K - le) * Ae
-                  , se = D * q + R * ei.lotusRotateSpeed
-                  , xe = 1 + Math.sin(R * 2) * .05
-                  , Le = G * xe
-                  , et = Le * Math.cos(se)
-                  , fe = Le * Math.sin(se)
-                  , Te = Math.sin(R * 2 + D * .1) * .2;
+                const q = ei.swordCount
+                  , we = D / (q - 1)
+                  , spiralTurns = 8
+                  , spiralAngle = we * Math.PI * 2 * spiralTurns + R * ei.lotusRotateSpeed
+                  , innerR = 1.5
+                  , outerR = ei.lotusRadius
+                  , spiralR = innerR + (outerR - innerR) * we
+                  , breathe = 1 + Math.sin(R * 1.5) * 0.03
+                  , rr = spiralR * breathe
+                  , et = rr * Math.cos(spiralAngle)
+                  , fe = rr * Math.sin(spiralAngle)
+                  , Te = Math.sin(R * 2 + we * Math.PI * 4) * (0.3 + we * 0.8);
                 P.set(E.x + et, E.y + fe, E.z + Te)
             } else if (S === "DAGENG" && _)
                 if (D === 0) {
